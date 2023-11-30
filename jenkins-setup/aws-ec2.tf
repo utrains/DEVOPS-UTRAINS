@@ -78,6 +78,9 @@ resource "aws_instance" "ec2_instance" {
   vpc_security_group_ids = [aws_security_group.jenkins_ec2_security_group.id]
   key_name               = aws_key_pair.jenkins_key.key_name
   user_data            = file("installjenkins.sh")
+
+  # Attach role to Ec2 instance
+  iam_instance_profile = aws_iam_instance_profile.jenkins_instance_profile.name
   # Set the instance's root volume to 30 GB
   root_block_device {
     volume_size = 30
@@ -90,22 +93,8 @@ resource "aws_instance" "ec2_instance" {
     volume_type = "gp2"
   }
 
-
   tags = {
     Name = "Jenkins-server"
   }
 }
 
-# an empty resource block
-resource "null_resource" "name" {
-
-  # ssh into the ec2 instance 
-  connection {
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = file(local_file.ssh_key.filename)
-    host        = aws_instance.ec2_instance.public_ip
-  }
-  # wait for ec2 to be created
-  depends_on = [aws_instance.ec2_instance]
-}

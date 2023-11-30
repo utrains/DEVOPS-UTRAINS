@@ -54,22 +54,6 @@ resource "aws_security_group" "jenkins_ec2_security_group" {
   }
 }
 
-# use data source to get a registered amazon linux 2 ami
-data "aws_ami" "amazon_linux_2" {
-  most_recent = true
-  owners      = ["amazon"]
-  
-  filter {
-    name   = "owner-alias"
-    values = ["amazon"]
-  }
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm*"]
-  }
-}
-
 # launch the ec2 instance and install jenkis
 resource "aws_instance" "ec2_instance" {
   ami                    = data.aws_ami.amazon_linux_2.id

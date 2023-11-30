@@ -7,3 +7,7 @@ output "jenkins_url" {
 output "ssh_connection_command" {
   value     = join ("", ["ssh -i jenkins_key_pair.pem ec2-user@", aws_instance.ec2_instance.public_dns])
 }
+
+output "Jenkins-instance-id" {
+  value = aws_instance.ec2_instance.id
+}

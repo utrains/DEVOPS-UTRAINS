@@ -1,7 +1,8 @@
 #!/bin/bash -x
 
-#### Autor : Utrains
+#### Autor : Utrains Team
 #### Date : 12-29-2022
+### Modified november 2023 by Prof
 
 sudo yum update -y
 

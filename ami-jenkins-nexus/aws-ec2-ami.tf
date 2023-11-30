@@ -49,14 +49,14 @@ resource "aws_instance" "qa_server" {
     Name = "qa-server"
     Owner = "Hermann90"
   }
-  # other instance configuration here
+
 }
 
 resource "aws_instance" "uat_server" {
   count = var.uat_server ? 1 : 0
   ami   = data.aws_ami.ami.id
   instance_type = "t2.micro"
-
+  iam_instance_profile = aws_iam_instance_profile.jenkins_instance_profile.name 
   vpc_security_group_ids = [aws_security_group.qa_uat_security_gp.id]
   key_name = aws_key_pair.instance_key.key_name
   user_data            = file("qa_uat.sh")
@@ -64,19 +64,7 @@ resource "aws_instance" "uat_server" {
     Name = "uat-server"
     Owner = "Hermann90"
   }
-  # other instance configuration here
-}
-# an empty resource block
-resource "null_resource" "name" {
-  # ssh into the ec2 instance 
-  connection {
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = file(local_file.ssh_key.filename)
-    hosts        = [aws_instance.jenkins_ec2_instance.public_ip, aws_instance.nexus_ec2_instance.public_ip, aws_instance.qa_server.public_ip, aws_instance.uat_server.public_ip]
-  }
-  # wait for ec2 to be created
-  depends_on = [aws_instance.jenkins_ec2_instance, aws_instance.nexus_ec2_instance, aws_instance.uat_server, aws_instance.qa_server]
+  
 }
 
 #######

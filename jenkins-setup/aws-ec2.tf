@@ -82,3 +82,16 @@ resource "aws_instance" "ec2_instance" {
   }
 }
 
+# Code to create Ami for our Jenkins server
+
+/*
+module "ami" {
+  source = "../ami-creation"
+  source_id = aws_instance.ec2_instance.id
+  ami_name = "jenkins_ami"
+}
+
+output "jenkins_ami_id" {
+  value = module.ami.ami_id
+}
+*/

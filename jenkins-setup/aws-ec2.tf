@@ -95,3 +95,6 @@ output "jenkins_ami_id" {
   value = module.ami.ami_id
 }
 */
+
+## terraform state list 
+### terraform state rm module.ami.aws_ami_from_instance.ami

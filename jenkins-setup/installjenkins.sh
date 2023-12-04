@@ -95,3 +95,6 @@ rm -f "terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
 #------------------------------------------------------------------------------------#
 # This part of the script to install python3 and all necessary moduls.               #
 #------------------------------------------------------------------------------------#
+sudo yum install python3 -y
+pip3 install requests
+pip3 install boto3

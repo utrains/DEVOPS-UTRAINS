@@ -5,7 +5,7 @@ provider "aws" {
 
 resource "aws_ami_from_instance" "ami" {
   name               = "Jenkins_ami-1"
-  source_instance_id = "i-06d195fdd30d7f7ff"
+  source_instance_id = "your jenkins intance id"
 }
 
 # Output the AMI ID for reference

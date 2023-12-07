@@ -44,7 +44,7 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 
 
 #------------------------------------------------------------------------------------#
-# This part of the script installs maven, then configures the environment variables. #
+# This part of the script Dowload and untar maven, using tar xf ...                  #
 #------------------------------------------------------------------------------------#
 
 # Download mavan to /tmp directory then untar it on /opt after create a symbolic link
@@ -52,19 +52,36 @@ wget https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bi
 sudo tar xf /tmp/apache-maven-3.9.5-bin.tar.gz -C /opt
 sudo mv /opt/apache-maven-3.9.5 /opt/maven
 
+#------------------------------------------------------------------------------------#
+# This part of the script installs  sonar-scanner tool                               #
+#------------------------------------------------------------------------------------#
+wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+unzip sonar-scanner-cli-4.8.0.2856-linux.zip
+
+sudo mv sonar-scanner-4.8.0.2856-linux/ /opt/sonar-scanner
+
+
+# Clean up downloaded files
+rm -rf sonar-scanner-cli-4.8.0.2856-linux.zip
+
+#-----------------------------------------------------------------------------------------------------#
+# This part of the script configures the JAVA, MAVEN And SONAR_SCANNER environment variables          #
+#-----------------------------------------------------------------------------------------------------#
 JAVA_PATH=`find /usr/lib/jvm/java-11* | head -n 3 | grep 64`
 export JAVA_HOME=$JAVA_PATH
 export M2_HOME=/opt/maven
 export M2=$M2_HOME/bin
-export PATH=${JAVA_HOME}:${M2_HOME}:${M2}:${PATH}
+export SONAR_RUNNER_HOME=/opt/sonar-scanner
+export PATH=${JAVA_HOME}:${M2_HOME}:${M2}:${SONAR_RUNNER_HOME}:${PATH}
 
 ### Configure the path variable 
 cat > /tmp/maven.sh << EOF
 # Confifuration file for java and maven
-#export JAVA_HOME=$JAVA_PATH
-#export M2_HOME=/opt/maven
-#export M2=$M2_HOME/bin
-export PATH=${JAVA_HOME}:${M2_HOME}:${M2}:${PATH}
+export JAVA_HOME=$JAVA_PATH
+export M2_HOME=/opt/maven
+export M2=$M2_HOME/bin
+export SONAR_RUNNER_HOME=${SONAR_RUNNER_HOME}
+export PATH=${JAVA_HOME}:${M2_HOME}:${M2}:${SONAR_RUNNER_HOME}:${PATH}
 EOF
 
 sudo cp /tmp/maven.sh /etc/profile.d/
@@ -98,3 +115,4 @@ rm -f "terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
 sudo yum install python3 -y
 pip3 install requests
 pip3 install boto3
+

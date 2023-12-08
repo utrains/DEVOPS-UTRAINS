@@ -5,5 +5,5 @@
  uat_server = false
  jfrog_server = false
  profile = "default"
- jenkins_ami = "ami-064bd5050ca35013f"
+ jenkins_ami = "ami-0c2e87ba34a85b977"
  jfrog_ami   = "ami-064bd5050ca35013f"

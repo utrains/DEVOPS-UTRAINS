@@ -26,11 +26,11 @@ resource "aws_instance" "jfrog_ec2_instance" {
   instance_type          = "t2.medium"
   vpc_security_group_ids = [aws_security_group.jfrog_security_gp.id]
   key_name               = aws_key_pair.instance_key.key_name
-  user_data = <<-EOF
+ /* user_data = <<-EOF
     #!/bin/bash
     /home/ec2-user/jfrog/bin/jfrog start
   EOF
-
+*/
   tags = {
     Name = "jfrog-server"
     Owner = "Hermann90"
@@ -67,5 +67,19 @@ resource "aws_instance" "uat_server" {
   
 }
 
-#######
+# Code to create Ami for our Jenkins server
 
+/*
+module "ami" {
+  source = "../ami-creation"
+  source_id = aws_instance.ec2_instance.id
+  ami_name = "jenkins_ami-2"
+}
+
+output "jenkins_ami_id" {
+  value = module.ami.ami_id
+}
+*/
+
+## terraform state list 
+### terraform state rm module.ami.aws_ami_from_instance.ami

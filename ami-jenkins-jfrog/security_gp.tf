@@ -34,12 +34,12 @@ resource "aws_security_group" "jenkins_security_gp" {
   }
 }
 
-# create security group for the nexus instance
-resource "aws_security_group" "nexus_security_gp" {
-  name        = "nexus security group"
-  description = "allow access on ports 8081 and 22 for nexus and ssh"
+# create security group for the jfrog instance
+resource "aws_security_group" "jfrog_security_gp" {
+  name        = "jfrog security group"
+  description = "allow access on ports 8081 and 22 for jfrog and ssh"
   vpc_id      = aws_default_vpc.default_vpc.id
-  # allow access on port 8081 for nexus Server
+  # allow access on port 8081 for jfrog Server
   ingress {
     description      = "httpd access port"
     from_port        = 8081
@@ -62,13 +62,13 @@ resource "aws_security_group" "nexus_security_gp" {
     cidr_blocks      = ["0.0.0.0/0"]
   }
   tags   = {
-    Name = "nexus security group"
+    Name = "jfrog security group"
   }
 }
 
 resource "aws_security_group" "qa_uat_security_gp" {
   name        = "qa-uat security group"
-  description = "allow access on ports 8082 and 22 for nexus and ssh"
+  description = "allow access on ports 8082 and 22 for jfrog and ssh"
   vpc_id      = aws_default_vpc.default_vpc.id
   # allow access on port 8082 for application Server
   ingress {
@@ -93,6 +93,6 @@ resource "aws_security_group" "qa_uat_security_gp" {
     cidr_blocks      = ["0.0.0.0/0"]
   }
   tags   = {
-    Name = "nexus security group"
+    Name = "jfrog security group"
   }
 }

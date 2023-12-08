@@ -9,11 +9,11 @@ output "jenkins_url" {
 
 # print the url of the nexus server
 output "nexus_ssh_connection_command" {
-  value     = var.nexus_server ? join ("", ["ssh -i instance_key_pair.pem ec2-user@", aws_instance.nexus_ec2_instance[0].public_dns]) : null
+  value     = var.jfrog_server ? join ("", ["ssh -i instance_key_pair.pem ec2-user@", aws_instance.nexus_ec2_instance[0].public_dns]) : null
 }
 # print the url of the jenkins server
 output "nexus_url" {
-  value     = var.nexus_server ? join ("", ["http://", aws_instance.nexus_ec2_instance[0].public_dns, ":", "8081"]) : null
+  value     = var.jfrog_server ? join ("", ["http://", aws_instance.nexus_ec2_instance[0].public_dns, ":", "8081"]) : null
 }
 
 # print the url of the jenkins server

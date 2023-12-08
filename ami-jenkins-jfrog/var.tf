@@ -11,7 +11,7 @@ variable "jenkins_ami" {
  description = "Jenkins ami" 
  default = ""
 }
-variable "nexus_ami" {
+variable "jfrog_ami" {
  description = "nexus ami" 
  default = ""
 }
@@ -38,7 +38,7 @@ variable uat_server {
   default     = false
   type        = bool
 }
-variable nexus_server {
+variable jfrog_server {
 description = "if nexus server can be created"
   default     = false
   type        = bool

@@ -5,7 +5,7 @@ resource "tls_private_key" "instance_key" {
 }
 # Create the Key Pair
 resource "aws_key_pair" "instance_key" {
-  key_name   = "instance_key_pair"  
+  key_name   = var.aws_key 
   public_key = tls_private_key.instance_key.public_key_openssh
 }
 # Save file

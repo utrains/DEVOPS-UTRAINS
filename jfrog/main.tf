@@ -54,9 +54,7 @@ resource "aws_instance" "JfrogInstance" {
   tags = {
     Name = "Jfrog instance"
   }
-  provisioner "local-exec" {
-    command = "sleep 120"
-  }
+  
 }
 
 # Code to create Ami for our Jfrog server
@@ -71,8 +69,9 @@ module "ami" {
 output "jfrog_ami_id" {
   value = module.ami.ami_id
 }
-*/
+
 
 ## terraform state list 
 ### terraform state rm module.ami.aws_ami_from_instance.ami
+*/
 

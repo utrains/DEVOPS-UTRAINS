@@ -3,7 +3,7 @@
  aws_key = "jenkins-jgrog-key"
  qa_server = false
  uat_server = false
- jfrog_server = false
+ jfrog_server = true
  profile = "default"
  jenkins_ami = "ami-0c2e87ba34a85b977"
- jfrog_ami   = "ami-064bd5050ca35013f"
+ jfrog_ami   = "ami-0c2e21c83b9f7c9c7"

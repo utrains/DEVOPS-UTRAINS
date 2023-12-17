@@ -11,6 +11,7 @@ resource "aws_instance" "jenkins_ec2_instance" {
   instance_type          = "t2.medium"
   vpc_security_group_ids = [aws_security_group.jenkins_security_gp.id]
   key_name               = aws_key_pair.instance_key.key_name
+  iam_instance_profile = aws_iam_instance_profile.jenkins_instance_profile.name
 
   tags = {
     Name = "jenkins-server"

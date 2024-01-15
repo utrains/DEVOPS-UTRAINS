@@ -22,7 +22,7 @@ yum install unzip -y
 ## Install Java 11:
 #sudo amazon-linux-extras install java-openjdk11 -y
 
-sudo yum install java-11* -y
+sudo yum install java-17* -y
 ## Install Jenkins then Enable the Jenkins service to start at boot :
 sudo yum install jenkins -y
 sudo systemctl enable jenkins

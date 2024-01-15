@@ -12,14 +12,6 @@ sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
 
 sudo yum upgrade -y
 
-## install Start And Enable Docker
-sudo yum install docker -y
-sudo service docker start 
-sudo systemctl enable docker.service
-
-sudo chmod 777  /var/run/docker.sock
-
-
 ## Install aws cli
 sudo yum install aws-cli -y
 
@@ -37,6 +29,15 @@ sudo systemctl enable jenkins
 
 ## Start Jenkins as a service:
 sudo systemctl start jenkins
+
+## install Start And Enable Docker
+sudo yum install docker -y
+sudo service docker start 
+sudo systemctl enable docker.service
+sudo chmod 777  /var/run/docker.sock
+sudo usermod -aG docker jenkins
+sudo systemctl restart jenkins
+
 
 ## Display Initial Jenkins Password
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
@@ -67,7 +68,7 @@ rm -rf sonar-scanner-cli-4.8.0.2856-linux.zip
 #-----------------------------------------------------------------------------------------------------#
 # This part of the script configures the JAVA, MAVEN And SONAR_SCANNER environment variables          #
 #-----------------------------------------------------------------------------------------------------#
-JAVA_PATH=`find /usr/lib/jvm/java-11* | head -n 3 | grep 64`
+JAVA_PATH=`find /usr/lib/jvm/java-17* | head -n 3 | grep 64`
 export JAVA_HOME=$JAVA_PATH
 export M2_HOME=/opt/maven
 export M2=$M2_HOME/bin

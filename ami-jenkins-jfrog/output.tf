@@ -9,7 +9,7 @@ output "jenkins_url" {
 
 # print the url of the jfrog server
 output "jfrog_ssh_connection_command" {
-  value     = var.jfrog_server ? join ("", ["ssh -i instance_key_pair.pem ec2-user@", aws_instance.jfrog_ec2_instance[0].public_dns]) : null
+  value     = var.jfrog_server ? join ("", ["ssh -i ", aws_instance.jenkins_ec2_instance.key_name,".pem " ,"ec2-user@", aws_instance.jfrog_ec2_instance[0].public_dns]) : null
 }
 # print the url of the jenkins server
 output "jfrog_url" {

@@ -19,7 +19,7 @@ sudo yum install aws-cli -y
 sudo yum install git -y
 yum install unzip -y
 
-## Install Java 11:
+## Install Java 17:
 #sudo amazon-linux-extras install java-openjdk11 -y
 
 sudo yum install java-17* -y

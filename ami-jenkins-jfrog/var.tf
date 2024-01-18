@@ -44,3 +44,26 @@ description = "if nexus server can be created"
   type        = bool
 }
 
+variable role_name {
+  description = "if nexus server can be created"
+  default     = "jenkinsAdminRoleAmi"
+  type        = string
+}
+
+variable qa_uat_sg_name {
+  description = "Name of UAT Security Group"
+  default     = "qa-uat-security-group"
+  type        = string
+}
+
+variable jfrog_sg_name {
+  description = "Name of JFROG Security Group"
+  default     = "jfrog-security-group"
+  type        = string
+}
+
+variable jenkins_sg_name {
+  description = "Name of Jenkins Security Group"
+  default     = "jenkins-security-group"
+  type        = string
+}

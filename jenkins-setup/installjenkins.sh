@@ -12,10 +12,10 @@ sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
 
 sudo yum upgrade -y
 
-## Install aws cli
+## Install aws cli ==> jenkins to run aws commands.
 sudo yum install aws-cli -y
 
-## install Git
+## install Git  ==> jenkins to run git commands
 sudo yum install git -y
 yum install unzip -y
 
@@ -30,18 +30,16 @@ sudo systemctl enable jenkins
 ## Start Jenkins as a service:
 sudo systemctl start jenkins
 
-## install Start And Enable Docker
+## install Start And Enable Docker 
 sudo yum install docker -y
 sudo service docker start 
 sudo systemctl enable docker.service
 sudo chmod 777  /var/run/docker.sock
+
+#Add jenkins user to docker group  ==> allow jenkins user to execute docker commands
+
 sudo usermod -aG docker jenkins
 sudo systemctl restart jenkins
-
-
-## Display Initial Jenkins Password
-sudo cat /var/lib/jenkins/secrets/initialAdminPassword
-
 
 
 #------------------------------------------------------------------------------------#
@@ -117,3 +115,9 @@ sudo yum install python3 -y
 pip3 install requests
 pip3 install boto3
 
+## Display Initial Jenkins Password
+Jenkins_password=`sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
+
+echo "The initial jenkins passowrd is: ${Jenkins_password}"
+
+exit(0)

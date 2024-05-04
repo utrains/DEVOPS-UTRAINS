@@ -114,6 +114,7 @@ rm -f "terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
 sudo yum install python3 -y
 pip3 install requests
 pip3 install boto3
+pip3 install virtualenv. 
 
 ## Display Initial Jenkins Password
 Jenkins_password=`sudo cat /var/lib/jenkins/secrets/initialAdminPassword`

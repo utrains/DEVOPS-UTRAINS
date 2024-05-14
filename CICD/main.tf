@@ -5,6 +5,7 @@ module "jenkins" {
   aws_key           = "jenkins-jgrog-key1"
   qa_server         = true
   jfrog_server      = true
+  uat_server        = false
   profile           = "default"
   jenkins_ami       = "ami-01bcc841d18872d85"
   jfrog_ami         = "ami-0fe1f3b5152381463"

@@ -3,8 +3,8 @@ module "jenkins" {
   aws_region        = "us-west-2"
   aws_instance_type = "t2.medium"
   aws_key           = "jenkins-jgrog-key1"
-  qa_server         = true
-  jfrog_server      = true
+  qa_server         = false
+  jfrog_server      = false
   uat_server        = false
   profile           = "default"
   jenkins_ami       = "ami-01bcc841d18872d85"

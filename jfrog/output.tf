@@ -1,5 +1,5 @@
 output "ssh-command" {
-  value = "ssh -i keypair.pem ec2-user@${aws_instance.JfrogInstance.public_dns}"
+  value = "ssh -i jfrog.pem ubuntu@${aws_instance.JfrogInstance.public_dns}"
 }
 
 output "jfrog-url" {

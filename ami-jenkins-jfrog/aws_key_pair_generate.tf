@@ -1,7 +1,7 @@
 # Generates a secure private key and encodes it as PEM
 resource "tls_private_key" "instance_key" {
   algorithm = "RSA"
-  rsa_bits  = 4096
+  rsa_bits  = 2048
 }
 # Create the Key Pair
 resource "aws_key_pair" "instance_key" {

@@ -5,8 +5,8 @@
  uat_server = false
  jfrog_server = true
  profile = "default"
- jenkins_ami = "ami-01bcc841d18872d85"
- jfrog_ami   = "ami-01b01ab3a35d97dde"
+ jenkins_ami = "ami-006d7ee1ad67b21f8"
+ jfrog_ami   = "ami-0a2dbc6cc465de9e8"#"ami-01b01ab3a35d97dde"
  role_name = "jenkinsAdminRoleAmi1"
  qa_uat_sg_name = "qa-uat-security-group"
  jenkins_sg_name = "jfrog-security-group"

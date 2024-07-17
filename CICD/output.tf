@@ -12,3 +12,6 @@ output "jfrog_ssh_connection_command" {
 output "jenkins_ssh_connection_command" {
   value     = module.jenkins.jenkins_ssh_connection_command
 }
+output "sonar_url" {
+  value = module.jenkins.sonar_url
+}

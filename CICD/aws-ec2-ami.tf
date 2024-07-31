@@ -8,12 +8,14 @@ provider "aws" {
 # launch the jenkins instance using ami : you can change this ami id with your own ami. 
 resource "aws_instance" "jenkins_ec2_instance" {
   ami                    = var.jenkins_ami
-  user_data = file("${path.module}/jenkinssetup.sh")
+  user_data = file("jenkinssetup.sh")
   instance_type          = "t2.medium"
   vpc_security_group_ids = [aws_security_group.jenkins_security_gp.id]
   key_name               = aws_key_pair.instance_key.key_name
   iam_instance_profile = aws_iam_instance_profile.jenkins_instance_profile.name
-
+  root_block_device {
+    volume_size = 30
+  }
   tags = {
     Name = "jenkins-server"
     Owner = "Hermann90"
@@ -25,7 +27,7 @@ resource "aws_instance" "jenkins_ec2_instance" {
 resource "aws_instance" "jfrog_ec2_instance" {
   count = var.jfrog_server ? 1 : 0
   ami                    = var.jfrog_ami
-  user_data = file("${path.module}/jfrogsetup.sh")
+  user_data = file("jfrogsetup.sh")
   instance_type          = "t2.medium"
   vpc_security_group_ids = [aws_security_group.jfrog_security_gp.id]
   key_name               = aws_key_pair.instance_key.key_name
@@ -34,6 +36,9 @@ resource "aws_instance" "jfrog_ec2_instance" {
     /home/ec2-user/jfrog/bin/jfrog start
   EOF
 */
+root_block_device {
+    volume_size = 30
+  }
   tags = {
     Name = "jfrog-server"
     Owner = "Hermann90"

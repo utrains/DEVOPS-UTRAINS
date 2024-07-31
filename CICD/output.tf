@@ -28,9 +28,20 @@ output "ssh_connection_qa_command" {
 }
 
 output "sonarqube-url" {
+  value =" http://${aws_instance.jfrog_ec2_instance[0].public_dns}:9000"
+  
+}
+output "tools-credentials" {
   value = <<EOF
-http://${aws_instance.jfrog_ec2_instance[0].public_dns}:9000
-  username: admin
-  password: admin
+  sonarqube:
+     username: admin
+     password: admin
+  jenkins:
+     username: devops
+     password: devops
+  jfrog:
+     username: admin
+     password: password
+       
 EOF
 }

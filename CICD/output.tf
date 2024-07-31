@@ -26,3 +26,11 @@ output "ssh_connection_uat_command" {
 output "ssh_connection_qa_command" {
   value     = var.qa_server ? join("", ["ssh -i ",var.aws_key,".pem ec2-user@", aws_instance.qa_server[0].public_dns]) : null  
 }
+
+output "sonarqube-url" {
+  value = <<EOF
+http://${aws_instance.jfrog_ec2_instance[0].public_dns}:9000
+  username: admin
+  password: admin
+EOF
+}

@@ -47,6 +47,7 @@ resource "aws_security_group" "jfrog_security_gp" {
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
   }
+  
   ingress {
     description      = "httpd access port"
     from_port        = 9000

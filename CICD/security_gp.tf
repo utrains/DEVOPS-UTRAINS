@@ -15,6 +15,20 @@ resource "aws_security_group" "jenkins_security_gp" {
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
   }
+  ingress {
+    description      = "httpd access port"
+    from_port        = 465
+    to_port          = 465
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
+  ingress {
+    description      = "httpd access port"
+    from_port        = 25
+    to_port          = 25
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
   # allow access on port 22 ssh connection
   ingress {
     description      = "ssh access"

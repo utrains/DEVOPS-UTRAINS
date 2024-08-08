@@ -45,3 +45,9 @@ output "tools-credentials" {
        
 EOF
 }
+output "repo-uri" {
+  value = aws_ecrpublic_repository.ecr1.repository_uri
+}
+output "repo_name" {
+ value = aws_ecrpublic_repository.ecr1.repository_name 
+}

@@ -8,7 +8,6 @@ resource "aws_vpc" "my-vpc" {
   }
 }
 
-
 # Create Web Public Subnet
 resource "aws_subnet" "web-subnet" {
   vpc_id                  = aws_vpc.my-vpc.id
@@ -122,7 +121,8 @@ resource "aws_security_group" "web-sg" {
   }
 
   tags = {
-    Name = "splunk-SG"
+    Name = "jenkins-jfrog-SG"
+    Owner = "Hermann90"
   }
 }
 
@@ -151,6 +151,10 @@ resource "aws_instance" "main-server" {
   vpc_security_group_ids = ["${aws_security_group.web-sg.id}"]
   key_name               = aws_key_pair.ec2-key.key_name
   
+
+  # Attach role to Ec2 instance
+  iam_instance_profile = aws_iam_instance_profile.jenkins_instance_profile.name
+
   # Set the instance's root volume to 30 GB
   root_block_device {
     volume_size = 30
@@ -176,9 +180,6 @@ resource "aws_instance" "main-server" {
     }
   }
 }
-
-
-
 
 # Wait for scripts to be installed in the first two null_resources before installing the last null_resource.
 resource "null_resource" "name" {
@@ -207,7 +208,7 @@ resource "null_resource" "name" {
       # End configuration on forwader
       "sudo sh installations_scripts/configure_jenkins.sh",
 
-      "sudo sh installations_scripts/jfrog_installation_with_docker.sh",
+      #"sudo sh installations_scripts/jfrog_installation_with_docker.sh",
     ]
   }
 
@@ -215,11 +216,6 @@ resource "null_resource" "name" {
   depends_on = [aws_instance.main-server]
 }
 
-# Fetch the file content
-# data "template_file" "remote_file" {
-#   template = file("/tmp/initial_jenkins_pwd.txt")
-#   depends_on = [ null_resource.name ]
-# }
 
 resource "null_resource" "fetch_remote_file" {
   provisioner "local-exec" {
@@ -228,30 +224,3 @@ resource "null_resource" "fetch_remote_file" {
 
   depends_on = [null_resource.name]
 }
-
-# data "local_file" "generated_file" {
-#   filename = "./local_initial_jenkins_pwd.txt"
-#   depends_on = [null_resource.fetch_remote_file]
-# }
-# output "file_content" {
-#   # Output the content of the generated file
-#   value = file(data.local_file.generated_file.filename)
-# }
-# resource "aws_ssm_parameter" "file_content" {
-#   name  = "FileContent"                       # Name of the parameter
-#   type  = "String"                            # Parameter type (String, StringList, SecureString)
-#   value = file("initial_jenkins_pwd.txt") # Replace with the path to your file
-#   tags = {
-#     Environment = "Development"
-#   }
-# }
-
-# data "aws_ssm_parameter" "file_content" {
-#   name = "FileContent"
-# }
-
-# output "file_content" {
-#   value = data.aws_ssm_parameter.file_content.value
-# }
-
-#aws ssm put-parameter --name "FileContent" --type "String" --value "$(cat /path/to/your/file.txt)" --overwrite

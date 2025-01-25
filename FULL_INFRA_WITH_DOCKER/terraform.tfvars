@@ -1,2 +1,2 @@
-aws_region        = "us-west-2"
-aws_instance_type_server = "t2.large"
+aws_region        = "us-east-1"
+aws_instance_type_server = "t2.medium"

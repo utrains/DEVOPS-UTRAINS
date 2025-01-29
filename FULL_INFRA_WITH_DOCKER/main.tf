@@ -4,7 +4,7 @@ resource "aws_vpc" "my-vpc" {
   enable_dns_support   = true
   enable_dns_hostnames = true
   tags = {
-    Name = "splunk VPC"
+    Name = "devops VPC"
   }
 }
 
@@ -16,7 +16,7 @@ resource "aws_subnet" "web-subnet" {
   availability_zone       = "${var.aws_region}a"
 
   tags = {
-    Name = "splunk-subnet"
+    Name = "devops-subnet"
   }
 }
 
@@ -25,7 +25,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.my-vpc.id
 
   tags = {
-    Name = "splunk IGW"
+    Name = "devops IGW"
   }
 }
 
@@ -53,7 +53,7 @@ resource "aws_route_table_association" "a" {
 
 # Create Web Security Group
 resource "aws_security_group" "web-sg" {
-  name        = "splunk security group"
+  name        = "devops security group"
   description = "Allow ssh inbound traffic"
   vpc_id      = aws_vpc.my-vpc.id
 

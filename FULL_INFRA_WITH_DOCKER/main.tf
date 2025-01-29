@@ -113,6 +113,14 @@ resource "aws_security_group" "web-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
  
+  ingress {
+    description = "Vault port"
+    from_port   = 8200
+    to_port     = 8200
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -194,13 +202,11 @@ resource "null_resource" "name" {
   # set permissions and run the  file
   provisioner "remote-exec" {
     inline = [
-      "ls",
-      "pwd",
+      "sudo yum install dos2unix -y",
+      
+      "dos2unix /home/ec2-user/installations_scripts/*.sh",
       # Install httpd
       "sh installations_scripts/docker_installation.sh",
-
-      #"cat initial_jenkins_pwd.txt > /tmp/initial_jenkins_pwd.txt",
-      #"aws ssm put-parameter --name FileContent --type String --value $(cat initial_jenkins_pwd.txt) --overwrite",
 
       # Install JFROG
       "sh installations_scripts/configure_jfrog.sh",
@@ -208,7 +214,7 @@ resource "null_resource" "name" {
       # End configuration on forwader
       "sudo sh installations_scripts/configure_jenkins.sh",
 
-      #"sudo sh installations_scripts/jfrog_installation_with_docker.sh",
+      "sudo sh installations_scripts/configure_vault.sh ${var.vault_token}",
     ]
   }
 

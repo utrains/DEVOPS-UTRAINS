@@ -19,3 +19,9 @@ variable "aws_key" {
   default     = "my_ec2_key"
   type        = string
 }
+
+variable "vault_token" {
+  description = "Token for first connexion in vault"
+  default     = "VAULT_UTRAINS_TOKEN"
+  type        = string
+}

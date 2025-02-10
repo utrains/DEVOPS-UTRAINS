@@ -39,6 +39,7 @@ sudo chmod 777  /var/run/docker.sock
 #Add jenkins user to docker group  ==> allow jenkins user to execute docker commands
 
 sudo usermod -aG docker jenkins
+sudo usermod -aG docker ec2-user
 sudo systemctl restart jenkins
 
 

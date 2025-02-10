@@ -17,37 +17,10 @@ output "jfrog_url" {
   value     = var.jfrog_server ? join ("", ["http://", aws_instance.jfrog_ec2_instance[0].public_dns, ":", "8081"]) : null
 }
 
-# print the url of the jenkins server
-output "ssh_connection_uat_command" {
-  value     = var.uat_server ? join("", ["ssh -i ",var.aws_key,".pem ec2-user@", aws_instance.uat_server[0].public_dns]) : null  
+# print the url of the jfrog server
+output "jenkins_ssh_connection_command" {
+  value     = module.jenkins.jenkins_ssh_connection_command
 }
-
-# print the url of the qa server
-output "ssh_connection_qa_command" {
-  value     = var.qa_server ? join("", ["ssh -i ",var.aws_key,".pem ec2-user@", aws_instance.qa_server[0].public_dns]) : null  
-}
-
-output "sonarqube-url" {
-  value =" http://${aws_instance.jfrog_ec2_instance[0].public_dns}:9000"
-  
-}
-output "tools-credentials" {
-  value = <<EOF
-  sonarqube:
-     username: admin
-     password: admin
-  jenkins:
-     username: devops
-     password: devops
-  jfrog:
-     username: admin
-     password: password
-       
-EOF
-}
-output "repo-uri" {
-  value = aws_ecrpublic_repository.ecr1.repository_uri
-}
-output "repo_name" {
- value = aws_ecrpublic_repository.ecr1.repository_name 
+output "sonar_url" {
+  value = module.jenkins.sonar_url
 }

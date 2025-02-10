@@ -1,5 +1,5 @@
 resource "aws_iam_role" "jenkins_admin_role" {
-  name = "jenkinsAdminRole"
+  name = "cicd_lab_admin_role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -28,6 +28,6 @@ resource "aws_iam_role_policy_attachment" "admin_policy_attachment" {
 }
 
 resource "aws_iam_instance_profile" "jenkins_instance_profile" {
-  name = "jenkinsAdminRole"
+  name = "cicd_lab_admin_role"
   role = aws_iam_role.jenkins_admin_role.name
 }

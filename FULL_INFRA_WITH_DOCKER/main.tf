@@ -156,21 +156,21 @@ resource "aws_instance" "main-server" {
   ami                    = data.aws_ami.amazon_linux_2.id
   instance_type          = var.aws_instance_type_server
   subnet_id              = aws_subnet.web-subnet.id
-  vpc_security_group_ids = ["${aws_security_group.web-sg.id}"]
+  vpc_security_group_ids = [aws_security_group.web-sg.id]
   key_name               = aws_key_pair.ec2-key.key_name
   
 
   # Attach role to Ec2 instance
   iam_instance_profile = aws_iam_instance_profile.jenkins_instance_profile.name
 
-  # Set the instance's root volume to 30 GB
+  # Set the instance's root volume to 50 GB
   root_block_device {
-    volume_size = 30
+    volume_size = 50
   }
 
 
   tags = {
-    Name        = "main-server"
+    Name        = "CICD-Server"
     owner       = "utrains"
     Environment = "dev"
   }
@@ -205,13 +205,13 @@ resource "null_resource" "name" {
       "sudo yum install dos2unix -y",
       
       "dos2unix /home/ec2-user/installations_scripts/*.sh",
-      # Install httpd
+      # Install docker
       "sh installations_scripts/docker_installation.sh",
 
       # Install JFROG
       "sh installations_scripts/configure_jfrog.sh",
 
-      # End configuration on forwader
+      # Jenkins configuration
       "sudo sh installations_scripts/configure_jenkins.sh",
 
       "sudo sh installations_scripts/configure_vault.sh ${var.vault_token}",
@@ -219,14 +219,14 @@ resource "null_resource" "name" {
   }
 
   # wait the 2 null resource that install
-  depends_on = [aws_instance.main-server]
+  depends_on = [aws_instance.main-server, local_file.ssh_key]
 }
 
 
 resource "null_resource" "fetch_remote_file" {
-  provisioner "local-exec" {
-    command = "scp -o StrictHostKeyChecking=no -i ${local_file.ssh_key.filename} ec2-user@${aws_instance.main-server.public_ip}:initial_jenkins_pwd.txt ./local_initial_jenkins_pwd.txt"
-  }
+   provisioner "local-exec" {
+     command = "scp -o StrictHostKeyChecking=no -i ${local_file.ssh_key.filename} ec2-user@${aws_instance.main-server.public_ip}:/home/ec2-user/initial_jenkins_pwd.txt ./local_initial_jenkins_pwd.txt"
+   }
 
-  depends_on = [null_resource.name]
-}
+   depends_on = [null_resource.name]
+ }

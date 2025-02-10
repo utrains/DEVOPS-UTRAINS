@@ -16,7 +16,7 @@ variable "aws_instance_type_server" {
 
 variable "aws_key" {
   description = "Key in region"
-  default     = "my_ec2_key"
+  default     = "my_cicd_key"
   type        = string
 }
 

@@ -1,4 +1,4 @@
- aws_region = "us-west-2"
+ aws_region = "us-east-1"
  aws_instance_type  = "t2.medium"
  aws_key = "jenkins-jgrog-key1"
  qa_server = false
@@ -11,3 +11,4 @@
  qa_uat_sg_name = "qa-uat-security-group"
  jenkins_sg_name = "jfrog-security-group"
  jfrog_sg_name = "jenkins-security-group"
+ #user_data = ""

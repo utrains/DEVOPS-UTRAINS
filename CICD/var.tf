@@ -67,4 +67,3 @@ variable jenkins_sg_name {
   default     = "jenkins-security-group"
   type        = string
 }
-#variable user_data {}

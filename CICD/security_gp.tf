@@ -5,7 +5,7 @@
 # create security group for the Jenkins instance
 resource "aws_security_group" "jenkins_security_gp" {
   name        = var.jenkins_sg_name
-  description = "allow access on few ports  for jenkins and ssh"
+  description = "allow access on ports 8080 and 22 for jenkins and ssh"
   vpc_id      = aws_default_vpc.default_vpc.id
   # allow access on port 8080 for Jenkins Server
   ingress {
@@ -26,13 +26,6 @@ resource "aws_security_group" "jenkins_security_gp" {
     description      = "httpd access port"
     from_port        = 25
     to_port          = 25
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-  ingress {
-    description      = "httpd access port"
-    from_port        = 80
-    to_port          = 80
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
   }
@@ -68,6 +61,7 @@ resource "aws_security_group" "jfrog_security_gp" {
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
   }
+  
   ingress {
     description      = "httpd access port"
     from_port        = 9000

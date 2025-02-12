@@ -1,10 +1,10 @@
 # Local .terraform directories
 **/.terraform/*
-
+*.pem
 # .tfstate files
 *.tfstate
 *.tfstate.*
-
+*local_initial_jenkins_pwd.txt
 # Crash log files
 crash.log
 crash.*.log

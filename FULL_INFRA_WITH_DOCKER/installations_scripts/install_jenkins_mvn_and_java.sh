@@ -1,3 +1,10 @@
+#!/bin/bash
+
+#-----------------------------------------------------------------------------------------------------------------------#
+# Date : 12 FEB 2025                                                                                                    #
+# Description : This script file allows you to configure : host server server,  configure splunk server log directories #
+# Write By : Hermann90 for Utrains                                                                                      #                                                                                             #
+#-----------------------------------------------------------------------------------------------------------------------#
 #!/bin/bash -x
 
 #### Autor : Utrains Team
@@ -20,11 +27,11 @@ sudo yum install git -y
 yum install unzip -y
 
 ## Install Java 17:
-#sudo amazon-linux-extras install java-openjdk11 -y
 
 sudo yum install java-17* -y
 ## Install Jenkins then Enable the Jenkins service to start at boot :
 sudo yum install jenkins -y
+sleep 10
 sudo systemctl enable jenkins
 
 ## Start Jenkins as a service:

@@ -5,11 +5,6 @@
 # Description : This script file allows you to configure : host server server,  configure splunk server log directories #
 # Write By : Hermann90 for Utrains                                                                                      #                                                                                             #
 #-----------------------------------------------------------------------------------------------------------------------#
-#!/bin/bash -x
-
-#### Autor : Utrains Team
-#### Date : 12-29-2022
-### Modified november 2023 by Prof
 
 sudo yum update -y
 

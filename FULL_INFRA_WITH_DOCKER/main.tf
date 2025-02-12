@@ -53,7 +53,7 @@ resource "aws_route_table_association" "a" {
 
 # Create Web Security Group
 resource "aws_security_group" "web-sg" {
-  name        = "devops security group"
+  name        = "cicd-security-group"
   description = "Allow ssh inbound traffic"
   vpc_id      = aws_vpc.my-vpc.id
 
@@ -71,27 +71,19 @@ resource "aws_security_group" "web-sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-   ingress {
-    description = "Jenkins"
-    from_port   = 2376
-    to_port     = 2376
+  ingress {
+    description = "test app port"
+    from_port   = 8082
+    to_port     = 8082
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-   ingress {
-    description = "Jenkins"
-    from_port   = 2375
-    to_port     = 2375
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 
   ingress {
-    description = "ssh from VPC server"
-    from_port   = 9997
-    to_port     = 9997
+    description = "sonarqube port"
+    from_port   = 9000
+    to_port     = 9000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -106,7 +98,7 @@ resource "aws_security_group" "web-sg" {
 
   # Open port for JFOG
   ingress {
-    description = "ssh from VPC server"
+    description = "jfrog port"
     from_port   = 8081
     to_port     = 8081
     protocol    = "tcp"

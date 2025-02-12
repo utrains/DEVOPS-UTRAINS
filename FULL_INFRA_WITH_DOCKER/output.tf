@@ -19,5 +19,5 @@ output "HASHICORP_VAULT_TOKEN" {
   value = "${var.vault_token}"
 }
 output "jenkins_initial_password" {
-  value = file("${path.module}/local_initial_jenkins_pwd.txt")
+  value = "local_initial_jenkins_pwd.txt"
 }

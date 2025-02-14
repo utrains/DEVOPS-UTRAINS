@@ -23,7 +23,7 @@ yum install unzip -y
 
 ## Install Java 17:
 
-sudo yum install java-17* -y
+#sudo yum install java-17* -y
 ## Install Jenkins then Enable the Jenkins service to start at boot :
 sudo yum install jenkins -y
 sleep 10
@@ -57,10 +57,11 @@ sudo mv /opt/apache-maven-3.9.5 /opt/maven
 #------------------------------------------------------------------------------------#
 # This part of the script installs  sonar-scanner tool                               #
 #------------------------------------------------------------------------------------#
+sudo rm -rf /opt/sonar* || echo "No sonar-scanner found"
 wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
 unzip sonar-scanner-cli-4.8.0.2856-linux.zip
 
-sudo mv sonar-scanner-4.8.0.2856-linux/ /opt/sonar-scanner
+sudo mv -f sonar-scanner-4.8.0.2856-linux/ /opt/sonar-scanner
 
 
 # Clean up downloaded files
@@ -69,21 +70,21 @@ rm -rf sonar-scanner-cli-4.8.0.2856-linux.zip
 #-----------------------------------------------------------------------------------------------------#
 # This part of the script configures the JAVA, MAVEN And SONAR_SCANNER environment variables          #
 #-----------------------------------------------------------------------------------------------------#
-JAVA_PATH=`find /usr/lib/jvm/java-17* | head -n 3 | grep 64`
-export JAVA_HOME=$JAVA_PATH
-export M2_HOME=/opt/maven
-export M2=$M2_HOME/bin
-export SONAR_RUNNER_HOME=/opt/sonar-scanner
-export PATH=${JAVA_HOME}:${M2_HOME}:${M2}:${SONAR_RUNNER_HOME}:${PATH}
+# sudo yum install java-17* -y
+# JAVA_PATH=`find /usr/lib/jvm/java-17* | head -n 3 | grep 64`
+# export JAVA_HOME=$JAVA_PATH
+# export M2_HOME=/opt/maven
+# export M2=$M2_HOME/bin
+# export SONAR_RUNNER_HOME=/opt/sonar-scanner
+# export PATH=${JAVA_HOME}:${M2_HOME}:${M2}:${SONAR_RUNNER_HOME}:${PATH}
 
 ### Configure the path variable 
 cat > /tmp/maven.sh << EOF
 # Confifuration file for java and maven
-export JAVA_HOME=$JAVA_PATH
 export M2_HOME=/opt/maven
 export M2=$M2_HOME/bin
 export SONAR_RUNNER_HOME=${SONAR_RUNNER_HOME}
-export PATH=${JAVA_HOME}:${M2_HOME}:${M2}:${SONAR_RUNNER_HOME}:${PATH}
+export PATH=${M2_HOME}:${M2}:${SONAR_RUNNER_HOME}:${PATH}
 EOF
 
 sudo cp /tmp/maven.sh /etc/profile.d/
@@ -122,6 +123,6 @@ pip3 install virtualenv.
 ## Display Initial Jenkins Password
 Jenkins_password=`sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
 
-echo "The initial jenkins passowrd is: ${Jenkins_password}"
+echo "${Jenkins_password}" > /home/ec2-user/initial_jenkins_pwd.txt
 
-exit(0)
+exit 0

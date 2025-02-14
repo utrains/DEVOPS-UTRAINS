@@ -95,7 +95,14 @@ resource "aws_security_group" "web-sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
+# Open port for Trivy
+  ingress {
+    description = "trivy port"
+    from_port   = 4954
+    to_port     = 4954
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
   # Open port for JFOG
   ingress {
     description = "jfrog port"
@@ -143,6 +150,11 @@ data "aws_ami" "amazon_linux_2" {
   }
 }
 
+# create static ip
+resource "aws_eip" "my-eip" {
+  domain = "vpc"
+  instance = aws_instance.main-server.id
+}
 #create ec2 instances
 resource "aws_instance" "main-server" {
   ami                    = data.aws_ami.amazon_linux_2.id
@@ -193,7 +205,9 @@ resource "null_resource" "name" {
   }
   # set permissions and run the  file
   provisioner "remote-exec" {
+    
     inline = [
+      "sudo yum update -y ",
       "sudo yum install dos2unix -y",
       
       "dos2unix /home/ec2-user/installations_scripts/*.sh",
@@ -215,6 +229,7 @@ resource "null_resource" "name" {
       # Install Vault
       "sudo sh installations_scripts/configure_vault.sh ${var.vault_token}",
     ]
+    
   }
 
   # wait the 2 null resource that install
@@ -224,7 +239,7 @@ resource "null_resource" "name" {
 
 resource "null_resource" "fetch_remote_file" {
    provisioner "local-exec" {
-     command = "scp -o StrictHostKeyChecking=no -i ${local_file.ssh_key.filename} ec2-user@${aws_instance.main-server.public_ip}:/home/ec2-user/initial_jenkins_pwd.txt ./local_initial_jenkins_pwd.txt"
+     command = "scp -o StrictHostKeyChecking=no -i ${local_file.ssh_key.filename} ec2-user@${aws_instance.main-server.public_ip}:/home/ec2-user/*.txt ."
    }
 
    depends_on = [null_resource.name]

@@ -36,10 +36,14 @@ confirm_installation_step () {
 
 # Step 1 : Install Java 11, and config JAVA_HOME environment variable
 echo "---------------- STEP 1 : JAVA INSTALLATION ----------------"
-sudo yum install java-11-amazon-corretto-headless -y
-JAVA_PATH=`find /usr/lib/jvm/java-11* | head -n 3 | grep 64`
+
+sudo yum install java-17* -y
+JAVA_PATH=`find /usr/lib/jvm/java-17* | head -n 3 | grep 64`
 export JAVA_HOME=$JAVA_PATH
-export PATH=${JAVA_HOME}:${PATH}
+export M2_HOME=/opt/maven
+export M2=$M2_HOME/bin
+export SONAR_RUNNER_HOME=/opt/sonar-scanner
+export PATH=${JAVA_HOME}:${M2_HOME}:${M2}:${SONAR_RUNNER_HOME}:${PATH}
 
 
 

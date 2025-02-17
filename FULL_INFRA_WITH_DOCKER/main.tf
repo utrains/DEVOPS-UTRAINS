@@ -65,14 +65,14 @@ resource "aws_security_group" "web-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    description = "ssh from VPC"
+    description = "Jenkins Port"
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    description = "test app port"
+    description = "Jfrog Port"
     from_port   = 8082
     to_port     = 8082
     protocol    = "tcp"
@@ -105,7 +105,7 @@ resource "aws_security_group" "web-sg" {
   }
   # Open port for JFOG
   ingress {
-    description = "jfrog port"
+    description = " port"
     from_port   = 8081
     to_port     = 8081
     protocol    = "tcp"
@@ -151,10 +151,10 @@ data "aws_ami" "amazon_linux_2" {
 }
 
 # create static ip
-resource "aws_eip" "my-eip" {
-  domain = "vpc"
-  instance = aws_instance.main-server.id
-}
+# resource "aws_eip" "my-eip" {
+#   domain = "vpc"
+#   instance = aws_instance.main-server.id
+# }
 #create ec2 instances
 resource "aws_instance" "main-server" {
   ami                    = data.aws_ami.amazon_linux_2.id
@@ -193,8 +193,8 @@ resource "aws_instance" "main-server" {
   }
 }
 
-# Wait for scripts to be installed in the first two null_resources before installing the last null_resource.
-resource "null_resource" "name" {
+# This Null Resource can install dos2unix and Docker
+resource "null_resource" "install_docker" {
 
   # ssh into the ec2 instance 
   connection {
@@ -211,29 +211,53 @@ resource "null_resource" "name" {
       "sudo yum install dos2unix -y",
       
       "dos2unix /home/ec2-user/installations_scripts/*.sh",
+      
       # Install docker
-      "sh installations_scripts/docker_installation.sh",
+      "sh installations_scripts/install_docker.sh",
+    ] 
+  }
+  # wait the main-server end his installation
+  depends_on = [aws_instance.main-server, local_file.ssh_key]
+}
 
-      # Install JFROG
-      "sh installations_scripts/configure_jfrog.sh",
 
+# Wait for scripts to be installed in the first two null_resources before installing the last null_resource.
+resource "null_resource" "name" {
+
+  # ssh into the ec2 instance 
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file(local_file.ssh_key.filename)
+    host        = aws_instance.main-server.public_ip
+  }
+  # set permissions and run the  file
+  provisioner "remote-exec" {
+    
+    inline = [
+      "ls",
+      "pwd",
+      "sh installations_scripts/install_java.sh",
+
+      "sh installations_scripts/install_jfrog.sh",    
+      
       # Jenkins configuration
-      "sudo sh installations_scripts/install_jenkins_mvn_and_java.sh",
+      "sudo sh installations_scripts/install_jenkins.sh",
 
-      # Install Trivy
+      # # Install Trivy
       "sudo sh installations_scripts/install_trivy.sh",
 
       # Install SonarQube
-      "sudo sh installations_scripts/start_sonarqube_using_docker.sh",
+      "sudo sh installations_scripts/install_sonar_using_docker.sh",
       
-      # Install Vault
-      "sudo sh installations_scripts/configure_vault.sh ${var.vault_token}",
+      # # Install Vault
+      "sudo sh installations_scripts/install_vault.sh ${var.vault_token}",
     ]
     
   }
 
   # wait the 2 null resource that install
-  depends_on = [aws_instance.main-server, local_file.ssh_key]
+  depends_on = [null_resource.install_docker, local_file.ssh_key]
 }
 
 

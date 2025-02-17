@@ -7,17 +7,18 @@ output "jenkins_url" {
 # output "jenkins_password_file" {
 #   value = "The Jenkins initial password is in the file called : initial_jenkins_pwd.txt in the remote server"
 # }
-output "JFROG_url" {
-  value = "http://${aws_instance.main-server.public_ip}:8081"
+output "JFROG_URL" {
+  value = "http://${aws_instance.main-server.public_ip}:8082"
+}
+
+output "JFROG_CREDENTIALS" {
+  value = "admin / password"
 }
 
 output "HASHICORP_VAULT_URL" {
   value = "http://${aws_instance.main-server.public_ip}:8200"
 }
 
-# output "HASHICORP_VAULT_TOKEN" {
-#   value = "${var.vault_token}"
-# }
 output "jenkins_initial_password" {
   value = "initial_jenkins_pwd.txt"
 }

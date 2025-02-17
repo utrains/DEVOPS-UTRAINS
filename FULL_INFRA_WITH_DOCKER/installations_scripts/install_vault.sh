@@ -6,31 +6,23 @@
 # Write By : Hermann90 for Utrains                                                                                      #
 #-----------------------------------------------------------------------------------------------------------------------#
 
-echo ">>>>>>>>>>>>>> VAULT CONFIGURATION <<<<<<<<<<<<<<<"
-# VAULT_TOKEN=$1
-# echo "The Vault token is $VAULT_TOKEN"
-# docker pull hashicorp/vault
+confirm_installation_step () {
+	if [ $? -eq 0 ]; then
+        echo "$(tput setaf 2) ################################################################# $(tput sgr 0)"
+		echo "$(tput setaf 2) >>>>>>>>>>>>>>>> $1 : $2 SUCESS <<<<<<<<<<<<<<<<$(tput sgr 0)"
+        echo "$(tput setaf 2) $2 is installed Successfully $(tput sgr 0)"
+        echo "$(tput setaf 2) >>>>>>>>>>>>>>>> Thanks to configure $2 <<<<<<<<<<<<<<<< $(tput sgr 0)"
+        echo "$(tput setaf 2) ################################################################# $(tput sgr 0)"
 
-# docker volume create vault_config
+	else
+        echo "$(tput setaf 1) **************** $1 : Service $2 Failled **************** $(tput sgr 0)"
+		echo "$(tput setaf 2) Sorry, we can't continue with this installation. Please check why the $2 service has not been installed. $(tput sgr 0)"
+		exit 1
+	fi
+} 
 
-# cat <<EOF > vault.hcl
-# storage "file" {
-#   path = "/vault/data"
 
-# }
-# listener "tcp" {
-#   address     = "0.0.0.0:8200"
-#   tls_disable = 1
-  
-# }
-# ui = true
-# EOF
-# sudo mv vault.hcl /var/lib/docker/volumes/vault_config/_data/vault.hcl
-# sudo chmod 777 /var/lib/docker/volumes/vault_config/_data/vault.hcl
-#docker run --cap-add=IPC_LOCK -d --name=vault-server --restart=on-failure -e "VAULT_DEV_ROOT_TOKEN_ID=$VAULT_TOKEN" -p 8200:8200 hashicorp/vault 
-#docker run -d --name=vault-server --cap-add=IPC_LOCK --restart=on-failure -p 8200:8200 -v vault_config:/vault/config -v vault_data:/vault/data hashicorp/vault server
-
-# hashicorp vault server install on amazom linux 2
+echo "$(tput setaf 4)  >>>>>>>>>>>>>> VAULT CONFIGURATION <<<<<<<<<<<<<<<  $(tput sgr 0)"
 
 
 sudo yum install -y yum-utils shadow-utils
@@ -83,9 +75,11 @@ listener "tcp" {
 ui = true
 EOF
 # generate vault key
-#systemctl stop vault 
 rm -rf /opt/vault/data || echo ""
 systemctl start vault
+
+confirm_installation_step "STEP 1" "VAULT"
+
 sleep 5
 vault operator init --address http://127.0.0.1:8200 -key-shares=1 -key-threshold=1 > vaultkey.txt
 

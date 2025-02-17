@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo " ================= DOCKER INSTALLATION PROCESS ================="
+echo "$(tput setaf 4) ================= DOCKER INSTALLATION PROCESS ================= $(tput sgr 0)"
 
 #-----------------------------------------------------------------------------------------------------------------------#
 # Step 0 : Functions Declaration                                                                                        #
@@ -25,10 +25,14 @@ confirm_installation_step () {
 
 sudo yum update -y
 sudo amazon-linux-extras install docker -y
+#sudo chmod 666 /var/run/docker.sock
 sudo service docker start
 sudo usermod -a -G docker ec2-user
+
 sudo chkconfig docker on
 systemctl status docker | grep "running"
+echo "$(tput setaf 4) ===========> Attribution des droits au fichier  /var/run/docker.sock $(tput sgr 0)"
+sudo chmod 666 /var/run/docker.sock
 
-# Confirm whether step 1 has been successfully completed before proceeding.
+# Confirm whether tep 1 has been successfully completed before proceeding.
 confirm_installation_step "STEP 1" "Docker"

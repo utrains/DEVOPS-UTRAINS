@@ -1,6 +1,6 @@
 variable "aws_region" {
   description = "This is aws region"
-  default     = "us-east-1"
+  default     = "us-west-1"
   type        = string
 }
 variable "profile" {

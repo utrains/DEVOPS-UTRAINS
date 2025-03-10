@@ -1,9 +1,8 @@
-variable aws_region {
+variable "region" {
   description = "This is aws region"
   default     = "us-east-1"
   type        = string
 }
-
 
 variable "profile" {
   description = "user account to use"
@@ -16,9 +15,22 @@ variable aws_instance_type {
   type        = string
 }
 
-variable aws_key {
-  description = "Key in region"
-  default     = "my_ec2_key"
-  type        = string
+variable "VPC_cidr" {
+  type = string
+  default = "192.168.0.0/16" 
 }
 
+variable "public_subnet_cidr" {
+  type = string
+  default = "192.168.1.0/24"
+}  
+
+variable "AZ" {
+  type = string
+  default = "us-east-1a"
+}
+
+variable "project-name" {
+  type    = string
+  default = "jenkins-setup-aws-ec2-lab"
+}

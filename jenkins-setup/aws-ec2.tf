@@ -1,21 +1,67 @@
 # configured aws provider with proper credentials
 provider "aws" {
-  region    = var.aws_region
+  region    = var.region
   profile   = var.profile
 }
 
-# create default vpc if one does not exit
-resource "aws_default_vpc" "default_vpc" {
+# Create a VPC
+
+resource "aws_vpc" "lab_vpc" {
+
+  cidr_block           = var.VPC_cidr
+  enable_dns_support   = "true" #gives you an internal domain name
+  enable_dns_hostnames = "true" #gives you an internal host name
+  instance_tenancy     = "default"
+
+  tags = {
+    Name = "${var.project-name}-VPC"
+  }
+
 }
 
-# use data source to get all avalablility zones in region
-data "aws_availability_zones" "available_zones" {}
+# Create an Internet Gateway
 
-# create default subnet if one does not exit
-resource "aws_default_subnet" "default_az1" {
-  availability_zone = data.aws_availability_zones.available_zones.names[0]
-  tags   = {
-    Name = "utrains default subnet"
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.lab_vpc.id
+
+  tags = {
+    Name = "${var.project-name}-igw"
+  }
+}
+
+# Create a route table
+
+resource "aws_route_table" "public_rt" {
+  vpc_id = aws_vpc.lab_vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+
+  tags = {
+    Name = "${var.project-name}-public-route-table"
+  }
+}
+
+# Associate the route table with the public subnet
+
+resource "aws_route_table_association" "public_assoc" {
+  subnet_id      = aws_subnet.public_subnet.id
+  route_table_id = aws_route_table.public_rt.id
+}
+
+# Create a public subnet
+
+resource "aws_subnet" "public_subnet" {
+
+  vpc_id                  = aws_vpc.lab_vpc.id
+  cidr_block              = var.public_subnet_cidr
+  map_public_ip_on_launch = true
+  availability_zone       = var.AZ
+
+  tags = {
+    Name = "${var.project-name}-public-subnet"
   }
 }
 
@@ -23,7 +69,7 @@ resource "aws_default_subnet" "default_az1" {
 resource "aws_security_group" "jenkins_ec2_security_group" {
   name        = "ec2-jenkins-sg"
   description = "allow access on ports 8080 and 22"
-  vpc_id      = aws_default_vpc.default_vpc.id
+  vpc_id      = aws_vpc.lab_vpc.id
 
   # allow access on port 8080 for Jenkins Server
   ingress {
@@ -58,10 +104,10 @@ resource "aws_security_group" "jenkins_ec2_security_group" {
 resource "aws_instance" "ec2_instance" {
   ami                    = data.aws_ami.amazon_linux_2.id
   instance_type          = var.aws_instance_type
-  subnet_id              = aws_default_subnet.default_az1.id
+  subnet_id              = aws_subnet.public_subnet.id
   vpc_security_group_ids = [aws_security_group.jenkins_ec2_security_group.id]
   key_name               = aws_key_pair.jenkins_key.key_name
-  user_data            = file("installjenkins.sh")
+  user_data              = file("installjenkins.sh")
 
   # Attach role to Ec2 instance
   iam_instance_profile = aws_iam_instance_profile.jenkins_instance_profile.name
@@ -98,3 +144,5 @@ output "jenkins_ami_id" {
 
 ## terraform state list 
 ### terraform state rm module.ami.aws_ami_from_instance.ami
+
+# print the url of the jenkins server

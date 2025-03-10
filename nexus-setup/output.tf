@@ -5,7 +5,7 @@ output "nexus_server_url" {
 
 # print the ssh command to connect to the nexus server
 output "ssh_connection" {
-    value = join ("", ["ssh -i nexus_key_pair.pem ec2-user@", aws_instance.ec2_instance.public_dns])
+    value = join ("", ["ssh -i ${var.project-name}.pem ec2-user@", aws_instance.ec2_instance.public_dns])
 }
 
 # print the path to get the nexus admin password

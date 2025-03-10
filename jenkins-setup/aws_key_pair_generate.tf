@@ -5,12 +5,12 @@ resource "tls_private_key" "jenkins_key" {
 }
 # Create the Key Pair
 resource "aws_key_pair" "jenkins_key" {
-  key_name   = "jenkins_key_pair"  
+  key_name   = "${var.project-name}_key_pair"  
   public_key = tls_private_key.jenkins_key.public_key_openssh
 }
 # Save file
 resource "local_file" "ssh_key" {
-  filename = "${aws_key_pair.jenkins_key.key_name}.pem"
+  filename = "${var.project-name}.pem"
   content  = tls_private_key.jenkins_key.private_key_pem
   file_permission = "400"
 }

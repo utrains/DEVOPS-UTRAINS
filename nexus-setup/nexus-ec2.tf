@@ -1,18 +1,75 @@
 # configured aws provider with proper credentials
 provider "aws" {
-  region    = var.aws_region
+  region    = var.region
   profile   = "default"
 }
 
-# create default vpc if one does not exit
-resource "aws_default_vpc" "default_vpc" {
+# Create a VPC
+
+resource "aws_vpc" "lab_vpc" {
+
+  cidr_block           = var.VPC_cidr
+  enable_dns_support   = "true" #gives you an internal domain name
+  enable_dns_hostnames = "true" #gives you an internal host name
+  instance_tenancy     = "default"
+
+  tags = {
+    Name = "${var.project-name}-VPC"
+  }
+
+}
+
+# Create an Internet Gateway
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.lab_vpc.id
+
+  tags = {
+    Name = "${var.project-name}-igw"
+  }
+}
+
+# Create a route table
+
+resource "aws_route_table" "public_rt" {
+  vpc_id = aws_vpc.lab_vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+
+  tags = {
+    Name = "${var.project-name}-public-route-table"
+  }
+}
+
+# Associate the route table with the public subnet
+
+resource "aws_route_table_association" "public_assoc" {
+  subnet_id      = aws_subnet.public_subnet.id
+  route_table_id = aws_route_table.public_rt.id
+}
+
+# Create a public subnet
+
+resource "aws_subnet" "public_subnet" {
+
+  vpc_id                  = aws_vpc.lab_vpc.id
+  cidr_block              = var.public_subnet_cidr
+  map_public_ip_on_launch = true
+  availability_zone       = var.AZ
+
+  tags = {
+    Name = "${var.project-name}-public-subnet"
+  }
 }
 
 # create security group for the ec2 instance
 resource "aws_security_group" "nexus_ec2_security_group" {
   name        = "ec2 nexus security group"
   description = "allow access on ports 8081 and 22"
-  vpc_id      = aws_default_vpc.default_vpc.id
+  vpc_id      = aws_vpc.lab_vpc.id
 
   # allow access on port 8081 for nexus Server
   ingress {
@@ -64,6 +121,7 @@ data "aws_ami" "amazon_linux_2" {
 resource "aws_instance" "ec2_instance" {
   ami                    = data.aws_ami.amazon_linux_2.id
   instance_type          = var.aws_instance_type
+  subnet_id              = aws_subnet.public_subnet.id
   vpc_security_group_ids = [aws_security_group.nexus_ec2_security_group.id]
   key_name               = aws_key_pair.nexus_key.key_name
   # user_data            = file("install-nexus.sh")

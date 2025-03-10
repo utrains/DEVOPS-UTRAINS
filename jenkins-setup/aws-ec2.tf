@@ -144,5 +144,3 @@ output "jenkins_ami_id" {
 
 ## terraform state list 
 ### terraform state rm module.ami.aws_ami_from_instance.ami
-
-# print the url of the jenkins server

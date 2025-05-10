@@ -24,6 +24,10 @@ confirm_installation_step () {
 
 echo "$(tput setaf 4)  >>>>>>>>>>>>>> VAULT CONFIGURATION <<<<<<<<<<<<<<<  $(tput sgr 0)"
 
+# Get the parameters of our script
+JFROG_SECRET_USERNAME=$1
+JFROG_SECRET_PASSWORD=$2
+JFROG_SECRET_TOKEN=$3
 
 sudo yum install -y yum-utils shadow-utils
 sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
@@ -82,4 +86,37 @@ confirm_installation_step "STEP 1" "VAULT"
 
 sleep 5
 vault operator init --address http://127.0.0.1:8200 -key-shares=1 -key-threshold=1 > vaultkey.txt
+VAULT_ROOT_TOKEN=`cat vaultkey.txt | grep "Initial Root Token" | cut -d' ' -f4`
+VAULT_SEALED_KEY=`cat vaultkey.txt | grep "Unseal Key 1" | cut -d' ' -f4`
+# Export the token and URL of vault
+export VAULT_TOKEN=$VAULT_ROOT_TOKEN
+export VAULT_ADDR='http://127.0.0.1:8200'
+
+vault operator unseal $VAULT_SEALED_KEY
+
+vault auth enable approle
+vault write auth/approle/role/jenkins-role token_num_uses=0 id_num_uses=0 policies="jenkins"
+
+vault read auth/approle/role/jenkins-role/role-id
+vault write -f auth/approle/role/jenkins-role/secret-id
+
+vault secrets enable -path=secrets kv
+
+cat > jenkins-policy.hcl << EOF
+path "secrets/creds/*" {
+ capabilities = ["read"]
+}
+EOF
+
+vault policy write jenkins jenkins-policy.hcl
+
+# Credentials secret creation
+vault write secrets/creds/jfrog username=$JFROG_SECRET_USERNAME password=$JFROG_SECRET_PASSWORD
+
+# Credentials token secret text : 
+vault write secrets/creds/token secret_token=$JFROG_SECRET_TOKEN
+
+# Credentials secret creation
+echo "Unseal Key 1: $VAULT_SEALED_KEY" > vaultkey.txt 
+echo "Initial Root Token: $VAULT_ROOT_TOKEN" >> vaultkey.txt 
 

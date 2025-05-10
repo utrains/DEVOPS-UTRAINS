@@ -250,8 +250,8 @@ resource "null_resource" "name" {
       # Install SonarQube
       "sudo sh installations_scripts/install_sonar_using_docker.sh",
       
-      # # Install Vault
-      "sudo sh installations_scripts/install_vault.sh ${var.vault_token}",
+      # Install Vault, then create a policy and a token for allow Jenkins to access the secrets in vault
+      "sudo sh installations_scripts/install_vault.sh ${var.jfrog_secret_username_and_password[0]} ${var.jfrog_secret_username_and_password[1]} ${var.jfrog_secret_token} ",
     ]
     
   }
@@ -268,3 +268,4 @@ resource "null_resource" "fetch_remote_file" {
 
    depends_on = [null_resource.name]
  }
+

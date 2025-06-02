@@ -97,8 +97,8 @@ vault operator unseal $VAULT_SEALED_KEY
 vault auth enable approle
 vault write auth/approle/role/jenkins-role token_num_uses=0 id_num_uses=0 policies="jenkins"
 
-ROLE_ID=`vault read auth/approle/role/jenkins-role/role-id | grep role_id | awk '{print $2}'`
-SECRET_ID=`vault write -f auth/approle/role/jenkins-role/secret-id  | awk '$1 == "secret_id" { print $2 }'`
+vault read auth/approle/role/jenkins-role/role-id
+vault write -f auth/approle/role/jenkins-role/secret-id
 
 vault secrets enable -path=secrets kv
 
@@ -119,8 +119,4 @@ vault write secrets/creds/token secret_token=$JFROG_SECRET_TOKEN
 # Credentials secret creation
 echo "Unseal Key 1: $VAULT_SEALED_KEY" > vaultkey.txt 
 echo "Initial Root Token: $VAULT_ROOT_TOKEN" >> vaultkey.txt 
-
-echo "Use the role ID and secret ID to allow Jenkins to authenticate with Vault." >> vaultkey.txt
-echo "Role ID: $ROLE_ID" >> vaultkey.txt
-echo "Secret ID: $SECRET_ID" >> vaultkey.txt
 

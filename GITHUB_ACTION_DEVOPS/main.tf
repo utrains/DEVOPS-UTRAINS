@@ -242,7 +242,7 @@ resource "null_resource" "name" {
       "sh installations_scripts/install_jfrog.sh",    
       
       # Jenkins configuration
-      "sudo sh installations_scripts/install_jenkins.sh",
+      #"sudo sh installations_scripts/install_jenkins.sh",
 
       # # Install Trivy
       "sudo sh installations_scripts/install_trivy.sh",

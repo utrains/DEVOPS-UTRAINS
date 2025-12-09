@@ -140,13 +140,13 @@ data "aws_ami" "amazon_linux_2" {
   owners      = ["amazon"]
 
   filter {
-    name   = "owner-alias"
-    values = ["amazon"]
+    name   = "name"
+    values = ["amzn2-ami-hvm*"]
   }
 
   filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm*"]
+    name   = "architecture"
+    values = ["x86_64"]
   }
 }
 

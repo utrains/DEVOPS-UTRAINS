@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "$(tput setaf 4) ================= DOCKER INSTALLATION PROCESS ================= $(tput sgr 0)"
+echo "$(tput setaf 4) ================= DOCKER INSTALLATION PROCESS IN AMAZONE LINUX 2023 ================= $(tput sgr 0)"
 
 #-----------------------------------------------------------------------------------------------------------------------#
 # Step 0 : Functions Declaration                                                                                        #
@@ -23,10 +23,12 @@ confirm_installation_step () {
 	fi
 } 
 
-sudo yum update -y
-sudo amazon-linux-extras install docker -y
+sudo dnf update -y
+sudo dnf install -y docker
 #sudo chmod 666 /var/run/docker.sock
-sudo service docker start
+sudo systemctl start docker
+sudo systemctl enable docker
+
 sudo usermod -a -G docker ec2-user
 
 sudo chkconfig docker on

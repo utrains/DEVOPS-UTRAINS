@@ -135,19 +135,23 @@ resource "aws_security_group" "web-sg" {
 
 
 #data for amazon linux
-data "aws_ami" "amazon_linux_2" {
-  most_recent = true
-  owners      = ["amazon"]
+# data "aws_ami" "amazon_linux_2" {
+#   most_recent = true
+#   owners      = ["amazon"]
 
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm*"]
-  }
+#   filter {
+#     name   = "name"
+#     values = ["amzn2-ami-hvm*"]
+#   }
 
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
+#   filter {
+#     name   = "architecture"
+#     values = ["x86_64"]
+#   }
+# }
+
+data "aws_ssm_parameter" "amzn2023" {
+  name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
 }
 
 # create static ip
@@ -157,7 +161,7 @@ data "aws_ami" "amazon_linux_2" {
 # }
 #create ec2 instances
 resource "aws_instance" "main-server" {
-  ami                    = data.aws_ami.amazon_linux_2.id
+  ami                    = data.aws_ssm_parameter.amzn2023.value
   instance_type          = var.aws_instance_type_server
   subnet_id              = aws_subnet.web-subnet.id
   vpc_security_group_ids = [aws_security_group.web-sg.id]

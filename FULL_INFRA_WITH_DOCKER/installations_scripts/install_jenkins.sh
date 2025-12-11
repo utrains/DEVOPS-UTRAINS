@@ -34,24 +34,23 @@ if [ -f $PROFILES_USERS_DIR/$JAVA_AND_MAVEN_PATH_FILE ]; then
 	echo echo -e "${CYAN_COLOR_STARTING}>>>>>>>>>>>>>>>> JAVA PATH IS : $JAVA_HOME  <<<<<<<<<<<<<<<< ${COLOR_RESET_OF}"                                                                               #                                                                                             
 fi
 
-sudo yum update -y
+sudo dnf update -y
 
 sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
 
 sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
 
-sudo yum upgrade -y
+sudo dnf upgrade -y
 
 ## Install aws cli ==> jenkins to run aws commands.
-sudo yum install aws-cli -y
+sudo dnf install aws-cli -y
 
 ## install Git  ==> jenkins to run git commands
-sudo yum install git -y
-yum install unzip -y
+sudo dnf install git -y
+sudo dnf install unzip -y
 
-#sudo yum install java-17* -y
 ## Install Jenkins then Enable the Jenkins service to start at boot :
-sudo yum install jenkins -y
+sudo dnf install jenkins -y
 sleep 10
 sudo systemctl enable jenkins
 
@@ -71,7 +70,7 @@ sudo systemctl restart jenkins
 #------------------------------------------------------------------------------------#
 
 # Install jq package for get Terraform version
-sudo yum install jq -y
+sudo dnf install jq -y
 
 # Get the latest version of Terraform from the releases page
 TERRAFORM_VERSION=1.6.5
@@ -88,7 +87,7 @@ rm -f "terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
 #------------------------------------------------------------------------------------#
 # This part of the script to install python3 and all necessary moduls.               #
 #------------------------------------------------------------------------------------#
-sudo yum install python3 -y
+sudo dnf install -y python3 python3-pip
 pip3 install requests
 pip3 install boto3
 

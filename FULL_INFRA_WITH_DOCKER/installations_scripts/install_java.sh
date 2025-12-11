@@ -39,16 +39,17 @@ SONAR_SCANNER_PATH=/opt/sonar-scanner
 # Step 1 : Install Java 17, and config JAVA_HOME environment variable
 echo -e "${CYAN_COLOR_STARTING}---------------- STEP 1 : JAVA INSTALLATION ---------------- ${COLOR_RESET_OF}"
 
-sudo yum install java-17* -y
+sudo dnf install -y java-17-amazon-corretto java-17-amazon-corretto-devel
 
 
 echo -e "${CYAN_COLOR_STARTING}---------------- STEP 2 : MAVEN INSTALLATION ---------------- ${COLOR_RESET_OF}"
 
 
 # Download mavan to /tmp directory then untar it on /opt after create a symbolic link
-wget https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz -P /tmp
-sudo tar xf /tmp/apache-maven-3.9.5-bin.tar.gz -C /opt
-sudo mv /opt/apache-maven-3.9.5 $MAVEN_PATH
+wget wget https://dlcdn.apache.org/maven/maven-3/3.9.11/binaries/apache-maven-3.9.11-bin.tar.gz -P /tmp
+sudo tar -xzf /tmp/apache-maven-3.9.11-bin.tar.gz -C /opt
+# Create a convenient symbolic link
+sudo ln -sf /opt/apache-maven-3.9.11 $MAVEN_PATH
 
 
 echo -e "${CYAN_COLOR_STARTING}---------------- STEP 3 : SONAR-SACANNER INSTALLATION ---------------- ${COLOR_RESET_OF}"

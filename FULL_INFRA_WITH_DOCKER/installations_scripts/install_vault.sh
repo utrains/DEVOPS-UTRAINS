@@ -29,9 +29,9 @@ JFROG_SECRET_USERNAME=$1
 JFROG_SECRET_PASSWORD=$2
 JFROG_SECRET_TOKEN=$3
 
-sudo yum install -y yum-utils shadow-utils
+sudo dnf install -y yum-utils shadow-utils
 sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
-sudo yum -y install vault
+sudo dnf -y install vault
 export VAULT_CONFIG=/etc/vault.d
 export VAULT_BINARY=/usr/bin/vault
 
